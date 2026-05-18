@@ -1,0 +1,23 @@
+@model List<EventBookingSystem.Models.Booking>
+
+<h1>My Bookings</h1>
+
+@if (TempData["Message"] != null)
+{
+    <p style="color: green;">@TempData["Message"]</p>
+}
+
+@foreach (var booking in Model)
+{
+    <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+        <h3>@booking.Event.Title</h3>
+        <p>Booked on: @booking.BookingDate</p>
+
+        <form asp-action="CancelBooking" method="post">
+            <input type="hidden" name="id" value="@booking.Id" />
+            <button type="submit" style="background-color:red; color:white;">
+                Cancel Booking
+            </button>
+        </form>
+    </div>
+}

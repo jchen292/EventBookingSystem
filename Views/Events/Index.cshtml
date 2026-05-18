@@ -1,0 +1,54 @@
+@model List<EventBookingSystem.Models.Event>
+
+<h1>Events</h1>
+
+<a asp-action="Create">Create Event</a>
+
+<hr />
+
+@if (TempData["Message"] != null)
+{
+    <p style="color: green;">@TempData["Message"]</p>
+}
+
+@{
+    var bookings = ViewBag.Bookings as List<EventBookingSystem.Models.Booking>;
+}
+
+@if (Model != null && Model.Any())
+{
+    foreach (var item in Model)
+    {
+        var isBooked = bookings != null && bookings.Any(b => b.EventId == item.Id);
+
+        <div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 15px;">
+            
+            <h2>@item.Title</h2>
+
+            <p><strong>Description:</strong> @item.Description</p>
+            <p><strong>Location:</strong> @item.Location</p>
+            <p><strong>Date:</strong> @item.EventDate</p>
+            <p><strong>Capacity:</strong> @item.Capacity</p>
+
+            @if (isBooked)
+            {
+                <button disabled style="background-color: gray;">
+                    Already Booked
+                </button>
+            }
+            else
+            {
+                <form asp-action="Book" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@item.Id" />
+                    <button type="submit">Book Event</button>
+                </form>
+            }
+
+        </div>
+    }
+}
+else
+{
+    <p>No events found</p>
+}
